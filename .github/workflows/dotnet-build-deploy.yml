@@ -14,26 +14,37 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
+      - name: Setup Azure CLI
+        uses: azure/setup-azure-cli@v1
 
-      - name: Terraform Init
-        working-directory: ./terraform
-        run: terraform init
+      - name: Login to Azure
+        run: az login --service-principal -u ${{ secrets.ARM_CLIENT_ID }} -p ${{ secrets.ARM_CLIENT_SECRET }} --tenant ${{ secrets.ARM_TENANT_ID }}
+
+      - name: Set subscription
+        run: az account set --subscription ${{ secrets.ARM_SUBSCRIPTION_ID }}
+
+      - name: Initialize Terraform
+        run: |
+          cd terraform
+          terraform init \
+            -backend-config="storage_account_name=tspontes7xg2dfzesta001" \
+            -backend-config="container_name=terraform" \
+            -backend-config="key=terraform.tfstate"
+
+      - name: Terraform Plan
+        run: |
+          cd terraform
+          terraform plan
 
       - name: Terraform Apply
-        working-directory: ./terraform
-        run: terraform apply -auto-approve
-        env:
-          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+        run: |
+          cd terraform
+          terraform apply -auto-approve
 
       - name: Output Azure App Service Name
         id: output
-        working-directory: ./terraform
         run: |
+          cd terraform
           echo "::set-output name=app_service_name::$(terraform output -raw app_service_name)"
 
   build:
