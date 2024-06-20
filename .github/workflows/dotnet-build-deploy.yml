@@ -19,11 +19,7 @@ jobs:
 
       - name: Terraform Init
         working-directory: ./terraform
-        run: |
-          terraform init \
-            -backend-config="storage_account_name=tspontes7xg2dfzesta001" \
-            -backend-config="container_name=terraform" \
-            -backend-config="key=terraform.tfstate"
+        run: terraform init
 
       - name: Terraform Apply
         working-directory: ./terraform
@@ -45,7 +41,7 @@ jobs:
     needs: terraform
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v2
 
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
@@ -80,9 +76,7 @@ jobs:
           path: ./output
 
       - name: Setup Azure CLI
-        uses: azure/setup-azure@v2
-        with:
-          azcliversion: 2.30.0
+        uses: azure/setup-azure-cli@v1
 
       - name: Login to Azure
         uses: azure/login@v1
@@ -92,7 +86,7 @@ jobs:
       - name: Retrieve Azure App Service Publish Profile
         id: retrieve-profile
         run: |
-          az webapp deployment list-publishing-profiles --resource-group myResourceGroup --name ${{ env.app_service_name }} --output json > publishProfile.json
+          az webapp deployment list-publishing-profiles --resource-group tpontes-githubact-001 --name ${{ steps.output.outputs.app_service_name }} --output json > publishProfile.json
           cat publishProfile.json
 
       - name: Set Publish Profile as Secret
@@ -102,6 +96,6 @@ jobs:
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ env.app_service_name }}
+          app-name: ${{ steps.output.outputs.app_service_name }}
           slot-name: 'Production'
           publish-profile: ${{ env.AZUREAPPSERVICE_PUBLISHPROFILE }}
