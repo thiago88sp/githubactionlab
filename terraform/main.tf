@@ -8,6 +8,7 @@ resource "azurerm_resource_group" "rsg" {
 
   tags = {
     Username = "tpontes"
+    Source   = "Terraform"
   }
 }
 
@@ -19,6 +20,7 @@ resource "azurerm_service_plan" "app_plan" {
   os_type             = "Windows"
   tags = {
     Username = "tpontes"
+    Source   = "Terraform"
   }
 }
 
@@ -32,5 +34,6 @@ resource "azurerm_windows_web_app" "web_app" {
 
   tags = {
     Username = "tpontes"
+    Source   = "Terraform"
   }
 }
