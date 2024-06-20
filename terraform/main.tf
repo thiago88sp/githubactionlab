@@ -3,7 +3,7 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "rsg" {
-  name     = "tpontes-githubact"
+  name     = "tpontes-githubact-001"
   location = "East US"
 
   tags = {
