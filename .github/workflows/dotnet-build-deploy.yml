@@ -46,21 +46,24 @@ jobs:
           cd terraform
           terraform apply -auto-approve
 
-      - name: Output Azure App Service Name
-        id: output
-        run: |
-          echo "app_service_name=$(terraform output -raw app_service_name)" >> $GITHUB_ENV
-        
-      - name: Use Output
-        run: echo "App Service Name is ${{ env.app_service_name }}"
-
       - name: Debug Terraform Outputs
         run: |
           cd terraform
-          terraform output
-      
-        
+          terraform output -json
 
+      - name: Output Azure App Service Name
+        id: output
+        run: |
+          cd terraform
+          app_service_name=$(terraform output -raw app_service_name)
+          echo "App Service Name: $app_service_name"
+          echo "app_service_name=$app_service_name" >> $GITHUB_ENV
+
+      - name: Use Output
+        run: echo "App Service Name is ${{ env.app_service_name }}"          
+
+      
+  # Build Stage #
   build:
     runs-on: windows-latest
     needs: terraform
