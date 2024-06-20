@@ -5,7 +5,10 @@ provider "azurerm" {
 resource "azurerm_resource_group" "rsg" {
   name     = "rsg-tpontes-githubact"
   location = "East US"
-  tags     = "Username:tpontes"
+
+  tags = {
+    Username = "tpontes"
+  }
 }
 
 resource "azurerm_service_plan" "app_plan" {
@@ -14,7 +17,9 @@ resource "azurerm_service_plan" "app_plan" {
   location            = azurerm_resource_group.rsg.location
   sku_name            = "B1"
   os_type             = "Windows"
-  tags                = "Username:tpontes"
+  tags = {
+    Username = "tpontes"
+  }
 }
 
 resource "azurerm_windows_web_app" "web_app" {
@@ -25,5 +30,7 @@ resource "azurerm_windows_web_app" "web_app" {
 
   site_config {}
 
-  tags = "Username:tpontes"
+  tags = {
+    Username = "tpontes"
+  }
 }
