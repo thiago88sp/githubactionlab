@@ -2,32 +2,24 @@ provider "azurerm" {
   features {}
 }
 
-resource "azurerm_resource_group" "rg" {
-  name     = "example-resources"
+resource "azurerm_resource_group" "rsg" {
+  name     = "rsg-tpontes-githubact"
   location = "East US"
 }
 
-resource "azurerm_app_service_plan" "asp" {
-  name                = "example-app-service-plan"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  sku {
-    tier     = "Basic"
-    size     = "B1"
-  }
+resource "azurerm_service_plan" "app_plan" {
+  name                = "tsp_app_plan"
+  resource_group_name = azurerm_resource_group.rsg.name
+  location            = azurerm_resource_group.rsg.location
+  sku_name            = "F1"
+  os_type             = "Windows"
 }
 
-resource "azurerm_app_service" "app" {
-  name                = "example-app-service"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  app_service_plan_id = azurerm_app_service_plan.asp.id
+resource "azurerm_windows_web_app" "example" {
+  name                = "tsp_web_app"
+  resource_group_name = azurerm_resource_group.rsg.name
+  location            = azurerm_service_plan.app_plan.location
+  service_plan_id     = azurerm_service_plan.app_plan.id
 
-  site_config {
-    dotnet_framework_version = "v6.0"
-  }
-
-  app_settings = {
-    "WEBSITE_RUN_FROM_PACKAGE" = "1"
-  }
+  site_config {}
 }
