@@ -32,7 +32,8 @@ jobs:
           terraform init \
             -backend-config="storage_account_name=tspontes7xg2dfzesta001" \
             -backend-config="container_name=terraform" \
-            -backend-config="key=terraform.tfstate"
+            -backend-config="key=terraform.tfstate" \
+            -backend-config="sas_token=sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiyx&se=2024-06-21T01:46:27Z&st=2024-06-20T17:46:27Z&spr=https,http&sig=VqGmQ18vOLZdp%2Fru01ChC%2F%2Bt0WGyJDN4PipsdCIeC2s%3D"
 
       - name: Terraform Plan
         run: |
