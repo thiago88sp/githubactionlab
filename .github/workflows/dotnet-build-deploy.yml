@@ -112,7 +112,7 @@ jobs:
         id: retrieve-profile
         run: |
           #az webapp deployment list-publishing-profiles --resource-group tpontes-githubact-001 --name ${{ steps.output.outputs.app_service_name }} --output json > publishProfile.json
-          az webapp deployment list-publishing-profiles --resource-group tpontes-githubact-001 --name ${{ env.app_service_name }} --output json > publishProfile.json
+          az webapp deployment list-publishing-profiles --resource-group tpontes-githubact-001 --name ${{ needs.terraform.outputs.app_service_name }} --output json > publishProfile.json
           cat publishProfile.json
 
       - name: Set Publish Profile as Secret
@@ -123,6 +123,6 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           #app-name: ${{ steps.output.outputs.app_service_name }}
-          app-name: ${{ env.app_service_name }} 
+          app-name: ${{ needs.terraform.outputs.app_service_name }}
           slot-name: 'Production'
           publish-profile: ${{ env.AZUREAPPSERVICE_PUBLISHPROFILE }}
