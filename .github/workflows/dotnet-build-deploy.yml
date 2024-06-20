@@ -19,7 +19,11 @@ jobs:
 
       - name: Terraform Init
         working-directory: ./terraform
-        run: terraform init
+        run: |
+          terraform init \
+            -backend-config="storage_account_name=tspontes7xg2dfzesta001" \
+            -backend-config="container_name=terraform" \
+            -backend-config="key=terraform.tfstate"
 
       - name: Terraform Apply
         working-directory: ./terraform
