@@ -53,6 +53,12 @@ jobs:
         
       - name: Use Output
         run: echo "App Service Name is ${{ env.app_service_name }}"
+
+      - name: Debug Terraform Outputs
+        run: |
+          cd terraform
+          terraform output
+      
         
 
   build:
