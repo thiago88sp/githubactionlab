@@ -16,7 +16,7 @@ resource "azurerm_service_plan" "app_plan" {
 }
 
 resource "azurerm_windows_web_app" "web_app" {
-  name                = "tsp_web_app_0001010"
+  name                = "tsp-web-app-001"
   resource_group_name = azurerm_resource_group.rsg.name
   location            = azurerm_service_plan.app_plan.location
   service_plan_id     = azurerm_service_plan.app_plan.id
