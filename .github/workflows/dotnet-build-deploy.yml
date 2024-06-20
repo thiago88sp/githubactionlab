@@ -49,8 +49,11 @@ jobs:
       - name: Output Azure App Service Name
         id: output
         run: |
-          cd terraform
-          echo "::set-output name=app_service_name::$(terraform output -raw app_service_name)"
+          echo "app_service_name=$(terraform output -raw app_service_name)" >> $GITHUB_ENV
+        
+      - name: Use Output
+        run: echo "App Service Name is ${{ env.app_service_name }}"
+        
 
   build:
     runs-on: windows-latest
