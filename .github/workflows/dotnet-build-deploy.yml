@@ -19,8 +19,12 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Login to Azure
-        run: az account set --subscription ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      - name: Set Azure Credentials as Environment Variables
+        run: |
+          echo "ARM_CLIENT_ID=${{ secrets.ARM_CLIENT_ID }}" >> $GITHUB_ENV
+          echo "ARM_CLIENT_SECRET=${{ secrets.ARM_CLIENT_SECRET }}" >> $GITHUB_ENV
+          echo "ARM_SUBSCRIPTION_ID=${{ secrets.ARM_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
+          echo "ARM_TENANT_ID=${{ secrets.ARM_TENANT_ID }}" >> $GITHUB_ENV
 
       - name: Initialize Terraform
         run: |
@@ -88,21 +92,4 @@ jobs:
       - name: Setup Azure CLI
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Retrieve Azure App Service Publish Profile
-        id: retrieve-profile
-        run: |
-          az webapp deployment list-publishing-profiles --resource-group tpontes-githubact-001 --name ${{ steps.output.outputs.app_service_name }} --output json > publishProfile.json
-          cat publishProfile.json
-
-      - name: Set Publish Profile as Secret
-        id: set-profile
-        run: echo "AZUREAPPSERVICE_PUBLISHPROFILE=$(cat publishProfile.json)" >> $GITHUB_ENV
-
-      - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: ${{ steps.output.outputs.app_service_name }}
-          slot-name: 'Production'
-          publish-profile: ${{ env.AZUREAPPSERVICE_PUBLISHPROFILE }}
+          creds: ${{ secrets.A
