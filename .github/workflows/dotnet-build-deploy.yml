@@ -113,7 +113,7 @@ jobs:
           echo "ARM_TENANT_ID=${{ secrets.ARM_TENANT_ID }}" >> $GITHUB_ENV
 
       - name: Initialize and Plan Terraform
-        working-directory: terraform
+        working-directory: ./terraform
         run: |
           terraform init \
             -backend-config="storage_account_name=tspontes7xg2dfzesta001" \
@@ -124,18 +124,18 @@ jobs:
           terraform plan
 
       - name: Apply Terraform
-        working-directory: terraform
+        working-directory: ./terraform
         run: |
           terraform apply -auto-approve
 
       - name: Debug Terraform Outputs
-        working-directory: terraform
+        working-directory: ./terraform
         run: |
           terraform output -json
 
       - name: Output Azure App Service Name
         id: output
-        working-directory: terraform
+        working-directory: ./terraform
         run: |
           app_service_name=$(terraform output -raw app_service_name)
           resource_group_name=$(terraform output -raw resource_group_name)
