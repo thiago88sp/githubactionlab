@@ -112,17 +112,10 @@ jobs:
           echo "ARM_SUBSCRIPTION_ID=${{ secrets.ARM_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
           echo "ARM_TENANT_ID=${{ secrets.ARM_TENANT_ID }}" >> $GITHUB_ENV
 
-      - name: Check directory structure
-        run: ls
-
       - name: Initialize Terraform
         run: |
           cd terraform \
-          && terraform init \
-            -backend-config="storage_account_name=tspontes7xg2dfzesta001" \
-            -backend-config="container_name=terraform" \
-            -backend-config="key=terraform.tfstate" \
-            -backend-config="sas_token=sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiyx&se=2024-06-25T22:20:08Z&st=2024-06-25T14:20:08Z&spr=https,http&sig=BF3VvsCA9QZXLvbjn6A1PtCvFrRAUeHK1URlDUPtsvQ%3D"
+          terraform init -backend-config="storage_account_name=tspontes7xg2dfzesta001" -backend-config="container_name=terraform" -backend-config="key=terraform.tfstate" -backend-config="sas_token=sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiyx&se=2024-06-25T22:20:08Z&st=2024-06-25T14:20:08Z&spr=https,http&sig=BF3VvsCA9QZXLvbjn6A1PtCvFrRAUeHK1URlDUPtsvQ%3D"
 
       - name: Terraform Plan
         run: |
