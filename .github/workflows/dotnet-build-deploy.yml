@@ -109,7 +109,9 @@ jobs:
 
       - name: Initialize Terraform
         run: |
-          cd terraform
+          ls-la
+          cd terraform \
+          ls-la
           terraform init \
             -backend-config="storage_account_name=tspontes7xg2dfzesta001" \
             -backend-config="container_name=terraform" \
