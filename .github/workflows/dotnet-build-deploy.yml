@@ -14,6 +14,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
@@ -108,11 +110,11 @@ jobs:
           echo "ARM_TENANT_ID=${{ secrets.ARM_TENANT_ID }}" >> $GITHUB_ENV
 
       - name: Check directory structure
-        run: ls -la
+        run: ls
 
       - name: Initialize Terraform
         run: |
-          cd terraform && \
+          cd terraform \
           terraform init \
             -backend-config="storage_account_name=tspontes7xg2dfzesta001" \
             -backend-config="container_name=terraform" \
