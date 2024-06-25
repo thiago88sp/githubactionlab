@@ -94,7 +94,7 @@ jobs:
   #      run: echo "This will be the application validation stage"
 
 
-  # Terraform Stage #
+  # Terraform Stage
   terraform:
     runs-on: ubuntu-latest
     needs: lacework-scan
@@ -112,40 +112,37 @@ jobs:
           echo "ARM_SUBSCRIPTION_ID=${{ secrets.ARM_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
           echo "ARM_TENANT_ID=${{ secrets.ARM_TENANT_ID }}" >> $GITHUB_ENV
 
-      - name: Initialize Terraform
+      - name: Initialize and Plan Terraform
+        working-directory: terraform
         run: |
-          cd terraform \
-          terraform init -backend-config="storage_account_name=tspontes7xg2dfzesta001" -backend-config="container_name=terraform" -backend-config="key=terraform.tfstate" -backend-config="sas_token=sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiyx&se=2024-06-25T22:20:08Z&st=2024-06-25T14:20:08Z&spr=https,http&sig=BF3VvsCA9QZXLvbjn6A1PtCvFrRAUeHK1URlDUPtsvQ%3D"
+          terraform init \
+            -backend-config="storage_account_name=tspontes7xg2dfzesta001" \
+            -backend-config="container_name=terraform" \
+            -backend-config="key=terraform.tfstate" \
+            -backend-config="sas_token=sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiyx&se=2024-06-25T22:20:08Z&st=2024-06-25T14:20:08Z&spr=https,http&sig=BF3VvsCA9QZXLvbjn6A1PtCvFrRAUeHK1URlDUPtsvQ%3D"
 
-      - name: Terraform Plan
-        run: |
-          cd terraform
           terraform plan
 
-      - name: Terraform Apply
+      - name: Apply Terraform
+        working-directory: terraform
         run: |
-          cd terraform
           terraform apply -auto-approve
 
       - name: Debug Terraform Outputs
+        working-directory: terraform
         run: |
-          cd terraform
           terraform output -json
 
       - name: Output Azure App Service Name
         id: output
+        working-directory: terraform
         run: |
-          cd terraform
           app_service_name=$(terraform output -raw app_service_name)
-          resource_group_name=$(terraform output -raw resource_group_name) # Adicionei esta linha para capturar o nome do resource group
+          resource_group_name=$(terraform output -raw resource_group_name)
           echo "App Service Name: $app_service_name"
-          echo "Resource Group Name: $resource_group_name" # Exibindo o nome do resource group
+          echo "Resource Group Name: $resource_group_name"
           echo "app_service_name=$app_service_name" >> $GITHUB_ENV
-          echo "resource_group_name=$resource_group_name" >> $GITHUB_ENV # Salvando o nome do resource group no ambiente
-          
-      - name: Use Output
-        run: echo "App Service Name is ${{ env.app_service_name }}"           
-
+          echo "resource_group_name=$resource_group_name" >> $GITHUB_ENV
 
   # Deploy Stage
   deploy:
@@ -167,7 +164,7 @@ jobs:
       - name: Retrieve Azure App Service Publish Profile
         id: retrieve-profile
         run: |
-          az webapp deployment list-publishing-profiles --resource-group ${{ env.resource_group_name }} --name ${{ env.app_service_name }} --output json > publishProfile.json # Ajustei para usar as variáveis de ambiente
+          az webapp deployment list-publishing-profiles --resource-group ${{ env.resource_group_name }} --name ${{ env.app_service_name }} --output json > publishProfile.json
           cat publishProfile.json
 
       - name: Set Publish Profile as Secret
@@ -177,5 +174,5 @@ jobs:
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ env.app_service_name }} # Ajustei para usar a variável de ambiente
+          app-name: ${{ env.app_service_name }}
           publish-profile: ${{ env.AZUREAPPSERVICE_PUBLISHPROFILE }}
