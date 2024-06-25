@@ -97,6 +97,7 @@ jobs:
   # Terraform Stage #
   terraform:
     runs-on: ubuntu-latest
+    needs: lacework-scan
 
     steps:
       - name: Checkout code
