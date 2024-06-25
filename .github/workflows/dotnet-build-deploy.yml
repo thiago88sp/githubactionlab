@@ -150,33 +150,22 @@ jobs:
           echo "app_service_name=$app_service_name" >> $GITHUB_ENV
           echo "resource_group_name=$resource_group_name" >> $GITHUB_ENV
 
-  # Deploy Stage
-  deploy:
-    runs-on: windows-latest
-    needs: terraform
-
-    steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
           name: dotnet-app
           path: ./output
 
-      - name: Setup Azure CLI
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
       - name: Retrieve Azure App Service Publish Profile
         id: retrieve-profile
         run: |
           az webapp deployment list-publishing-profiles --resource-group ${{ env.resource_group_name }} --name ${{ env.app_service_name }} --output json > publishProfile.json
           cat publishProfile.json
-
+  
       - name: Set Publish Profile as Secret
         id: set-profile
         run: echo "AZUREAPPSERVICE_PUBLISHPROFILE=$(cat publishProfile.json)" >> $GITHUB_ENV
-
+  
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
