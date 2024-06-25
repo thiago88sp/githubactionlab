@@ -164,8 +164,9 @@ jobs:
   
       - name: Set Publish Profile as Secret
         id: set-profile
-        run: echo "AZUREAPPSERVICE_PUBLISHPROFILE=$(cat publishProfile.json)" >> $GITHUB_ENV
-  
+        run: |
+          echo "AZUREAPPSERVICE_PUBLISHPROFILE=$(cat publishProfile.json | jq -c .)" >> $GITHUB_ENV
+        
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
