@@ -87,6 +87,9 @@ jobs:
     needs: lacework-scan
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: First message
         run: echo "This will be the application validation stage"
 
