@@ -9,7 +9,7 @@ on:
 jobs:
 
   # Build Stage #
-  build:
+  ci-build:
     runs-on: windows-latest
 
     steps:
@@ -41,7 +41,7 @@ jobs:
   # Unit Test Stage
   unit-test:
     runs-on: ubuntu-latest
-    needs: build
+    needs: ci-build
 
     steps:
     - name: Checkout code
@@ -94,8 +94,8 @@ jobs:
   #      run: echo "This will be the application validation stage"
 
 
-  # Terraform Stage #
-  terraform:
+  # CD Deploy Stage #
+  cd-deploy:
     runs-on: ubuntu-latest
     needs: lacework-scan
 
