@@ -94,7 +94,7 @@ jobs:
   #      run: echo "This will be the application validation stage"
 
 
-  # CD Deploy Stage #
+  # CD Deploy Stage ##
   cd-deploy:
     runs-on: ubuntu-latest
     needs: lacework-scan
