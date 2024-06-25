@@ -112,8 +112,8 @@ jobs:
           echo "ARM_SUBSCRIPTION_ID=${{ secrets.ARM_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
           echo "ARM_TENANT_ID=${{ secrets.ARM_TENANT_ID }}" >> $GITHUB_ENV
 
-      - name: Initialize and Plan Terraform
-        working-directory: ./terraform
+      - name: Initialize Terraform
+        working-directory: terraform
         run: |
           terraform init \
             -backend-config="storage_account_name=tspontes7xg2dfzesta001" \
@@ -121,21 +121,23 @@ jobs:
             -backend-config="key=terraform.tfstate" \
             -backend-config="sas_token=sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiyx&se=2024-06-25T22:20:08Z&st=2024-06-25T14:20:08Z&spr=https,http&sig=BF3VvsCA9QZXLvbjn6A1PtCvFrRAUeHK1URlDUPtsvQ%3D"
 
-          terraform plan
+      - name: Plan Terraform
+        working-directory: terraform
+        run: |
 
       - name: Apply Terraform
-        working-directory: ./terraform
+        working-directory: terraform
         run: |
           terraform apply -auto-approve
 
       - name: Debug Terraform Outputs
-        working-directory: ./terraform
+        working-directory: terraform
         run: |
           terraform output -json
 
       - name: Output Azure App Service Name
         id: output
-        working-directory: ./terraform
+        working-directory: terraform
         run: |
           app_service_name=$(terraform output -raw app_service_name)
           resource_group_name=$(terraform output -raw resource_group_name)
