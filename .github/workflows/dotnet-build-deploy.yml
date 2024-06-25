@@ -97,7 +97,7 @@ jobs:
   # Terraform Stage #
   terraform:
     runs-on: ubuntu-latest
-    needs: lacework-app-scan
+    needs: lacework-scan
 
     steps:
       - name: Setup Azure CLI
