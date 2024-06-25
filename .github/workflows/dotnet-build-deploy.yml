@@ -7,8 +7,57 @@ on:
   workflow_dispatch:
 
 jobs:
-  # Terraform Stage #
-  terraform:
+
+  # Build Stage #
+  build:
+    runs-on: windows-latest
+    needs: terraform
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '8.x' # Altere para a versão desejada
+          include-prerelease: true
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Publish
+        run: dotnet publish --configuration Release --output ./output --no-build
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v3
+        with:
+          name: dotnet-app
+          path: ./output
+
+  # Unit Test Stage
+  unit-test:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 8.x
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal
+
+  lacework-scan:
     runs-on: ubuntu-latest
 
     steps:
@@ -31,6 +80,19 @@ jobs:
           LW_API_KEY: ${{ secrets.LW_API_KEY }}
           LW_API_SECRET: ${{ secrets.LW_API_SECRET }}
 
+  lacework-app-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: First message
+        run: echo "This will be the application validation stage"
+
+
+  # Terraform Stage #
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Setup Azure CLI
         uses: azure/login@v1
         with:
@@ -79,37 +141,8 @@ jobs:
           echo "resource_group_name=$resource_group_name" >> $GITHUB_ENV # Salvando o nome do resource group no ambiente
           
       - name: Use Output
-        run: echo "App Service Name is ${{ env.app_service_name }}"        
+        run: echo "App Service Name is ${{ env.app_service_name }}"           
 
-      
-  # Build Stage #
-  build:
-    runs-on: windows-latest
-    needs: terraform
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Set up .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '8.x' # Altere para a versão desejada
-          include-prerelease: true
-
-      - name: Restore dependencies
-        run: dotnet restore
-
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
-
-      - name: Publish
-        run: dotnet publish --configuration Release --output ./output --no-build
-
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v3
-        with:
-          name: dotnet-app
-          path: ./output
 
   # Deploy Stage
   deploy:
