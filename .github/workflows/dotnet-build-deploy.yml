@@ -106,11 +106,14 @@ jobs:
         run: |
           cd terraform
           app_service_name=$(terraform output -raw app_service_name)
+          resource_group_name=$(terraform output -raw resource_group_name) # Adicionei esta linha para capturar o nome do resource group
           echo "App Service Name: $app_service_name"
+          echo "Resource Group Name: $resource_group_name" # Exibindo o nome do resource group
           echo "app_service_name=$app_service_name" >> $GITHUB_ENV
-
+          echo "resource_group_name=$resource_group_name" >> $GITHUB_ENV # Salvando o nome do resource group no ambiente
+          
       - name: Use Output
-        run: echo "App Service Name is ${{ env.app_service_name }}"          
+        run: echo "App Service Name is ${{ env.app_service_name }}"        
 
       
   # Build Stage #
@@ -142,6 +145,7 @@ jobs:
           name: dotnet-app
           path: ./output
 
+  # Deploy Stage
   deploy:
     runs-on: windows-latest
     needs: [terraform, build]
@@ -161,8 +165,7 @@ jobs:
       - name: Retrieve Azure App Service Publish Profile
         id: retrieve-profile
         run: |
-          #az webapp deployment list-publishing-profiles --resource-group tpontes-githubact-001 --name ${{ steps.output.outputs.app_service_name }} --output json > publishProfile.json
-          az webapp deployment list-publishing-profiles --resource-group tpontes-githubact-001 --name ${{ needs.terraform.outputs.app_service_name }} --output json > publishProfile.json
+          az webapp deployment list-publishing-profiles --resource-group ${{ env.resource_group_name }} --name ${{ env.app_service_name }} --output json > publishProfile.json # Ajustei para usar as variáveis de ambiente
           cat publishProfile.json
 
       - name: Set Publish Profile as Secret
@@ -172,7 +175,5 @@ jobs:
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          #app-name: ${{ steps.output.outputs.app_service_name }}
-          app-name: ${{ needs.terraform.outputs.app_service_name }}
-          slot-name: 'Production'
+          app-name: ${{ env.app_service_name }} # Ajustei para usar a variável de ambiente
           publish-profile: ${{ env.AZUREAPPSERVICE_PUBLISHPROFILE }}
