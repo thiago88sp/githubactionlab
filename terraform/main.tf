@@ -11,12 +11,13 @@ terraform {
 }
 
 resource "azurerm_resource_group" "rsg" {
-  name     = "tpontes-githubact-001"
+  name     = "tpontes-lacework"
   location = "East US"
 
   tags = {
     Username = "tpontes"
     Source   = "Terraform"
+    Purpose = "Lacework Test"
   }
 }
 
