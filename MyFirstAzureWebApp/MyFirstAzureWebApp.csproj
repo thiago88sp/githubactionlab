@@ -6,8 +6,4 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Content Include="wwwroot/images/CCS.jpg" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
-
 </Project>
