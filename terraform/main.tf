@@ -22,7 +22,7 @@ resource "azurerm_resource_group" "rsg" {
 }
 
 resource "azurerm_service_plan" "app_plan" {
-  name                = "tsp_app_plan-001"
+  name                = "tsp_lw_app_plan-001"
   resource_group_name = azurerm_resource_group.rsg.name
   location            = azurerm_resource_group.rsg.location
   sku_name            = "B1"
@@ -35,7 +35,7 @@ resource "azurerm_service_plan" "app_plan" {
 }
 
 resource "azurerm_windows_web_app" "web_app" {
-  name                = "tsp-web-app-0001"
+  name                = "tsp-lw-web-app-0001"
   resource_group_name = azurerm_resource_group.rsg.name
   location            = azurerm_service_plan.app_plan.location
   service_plan_id     = azurerm_service_plan.app_plan.id
