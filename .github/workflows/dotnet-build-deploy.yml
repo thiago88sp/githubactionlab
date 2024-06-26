@@ -122,7 +122,7 @@ jobs:
             -backend-config="storage_account_name=tspontes7xg2dfzesta001" \
             -backend-config="container_name=terraform" \
             -backend-config="key=terraform.tfstate" \
-            -backend-config="sas_token=sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiyx&se=2024-06-26T03:46:04Z&st=2024-06-25T19:46:04Z&spr=https,http&sig=Jd3H76Y3A4JKuznZCG%2BTyAoZi%2BMMGls6R%2Bpk5ygooqM%3D"
+            -backend-config="sas_token=sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiyx&se=2024-06-26T20:08:08Z&st=2024-06-26T12:08:08Z&spr=https,http&sig=DRxJpnzKAKp7snOS2rg5xdEa%2B3ieID1QqHzhXaDvbdU%3D"
 
       - name: Terraform Plan
         run: |
