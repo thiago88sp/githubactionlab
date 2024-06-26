@@ -13,30 +13,25 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: recursive
+      - uses: actions/checkout@v4
 
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '8.x' # Altere para a versão desejada
+          dotnet-version: '8.x'
           include-prerelease: true
 
-      - name: Restore dependencies
-        run: dotnet restore
+      - name: Build with dotnet
+        run: dotnet build --configuration Release
 
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
-
-      - name: Publish
-        run: dotnet publish --configuration Release --output ./output --no-build
+      - name: dotnet publish
+        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
-          name: dotnet-app
-          path: ./output
+          name: .net-app
+          path: ${{env.DOTNET_ROOT}}/myapp
 
   # Unit Test Stage
   unit-test:
@@ -153,8 +148,7 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
-          name: dotnet-app
-          path: ./output
+          name: .net-app
 
       - name: Retrieve Azure App Service Publish Profile
         id: retrieve-profile
@@ -172,7 +166,7 @@ jobs:
         with:
           app-name: ${{ env.app_service_name }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          slot-name: production
+          slot-name: 'Production'
           package: .
         env:
           AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
