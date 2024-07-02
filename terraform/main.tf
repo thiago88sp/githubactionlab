@@ -40,7 +40,9 @@ resource "azurerm_windows_web_app" "web_app" {
   location            = azurerm_service_plan.app_plan.location
   service_plan_id     = azurerm_service_plan.app_plan.id
 
-  site_config {}
+  site_config {
+    http2_enabled = true
+  }
 
   https_only = true
 
