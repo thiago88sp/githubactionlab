@@ -1,5 +1,5 @@
 resource "azurerm_mysql_flexible_server" "mysql" {
-  name                   = "lw-msql-002"
+  name                   = "msql-lw-010"
   resource_group_name    = azurerm_resource_group.rsg.name
   location               = azurerm_resource_group.rsg.location
   administrator_login    = "psqladmin"
