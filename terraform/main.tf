@@ -42,6 +42,8 @@ resource "azurerm_windows_web_app" "web_app" {
 
   site_config {}
 
+  https_only = true
+
   tags = {
     Username = "tpontes"
     Source   = "Terraform"
