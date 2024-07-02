@@ -10,4 +10,8 @@ resource "azurerm_mysql_flexible_server" "mysql" {
 
   zone = "1"
 
+  tags = {
+    Username = "tpontes"
+  }
+
 }
