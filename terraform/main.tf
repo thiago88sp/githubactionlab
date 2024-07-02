@@ -4,7 +4,7 @@ provider "azurerm" {
 
 terraform {
   backend "azurerm" {
-    storage_account_name = "tspontes7xg2dfzesta001"
+    storage_account_name = "statpontesshared"
     container_name       = "terraform"
     key                  = "terraform.tfstate"
   }

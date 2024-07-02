@@ -114,10 +114,10 @@ jobs:
         run: |
           cd terraform
           terraform init \
-            -backend-config="storage_account_name=tspontes7xg2dfzesta001" \
+            -backend-config="storage_account_name=statpontesshared" \
             -backend-config="container_name=terraform" \
             -backend-config="key=terraform.tfstate" \
-            -backend-config="sas_token=sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiyx&se=2024-06-26T20:08:08Z&st=2024-06-26T12:08:08Z&spr=https,http&sig=DRxJpnzKAKp7snOS2rg5xdEa%2B3ieID1QqHzhXaDvbdU%3D"
+            -backend-config="sas_token=sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2024-07-08T01:03:25Z&st=2024-07-02T17:03:25Z&spr=https,http&sig=y2NiZwIsdK%2FZx0NvyAV7PBEVDuCrtP1YCbFDe4fhF68%3D"
 
       - name: Terraform Plan
         run: |
