@@ -8,4 +8,6 @@ resource "azurerm_mysql_flexible_server" "mysql" {
 
   sku_name               = "GP_Standard_D2ds_v4"
 
+  zone = "1"
+
 }
