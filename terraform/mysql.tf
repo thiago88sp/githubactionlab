@@ -6,7 +6,7 @@ resource "azurerm_mysql_flexible_server" "mysql" {
   administrator_password = "H@Sh1CoR3!"
   backup_retention_days  = 1
 
-  sku_name               = "GP_Standard_D2ds_v4"
+  sku_name = "GP_Standard_D2ds_v4"
 
   zone = "1"
 

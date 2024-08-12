@@ -17,7 +17,7 @@ resource "azurerm_resource_group" "rsg" {
   tags = {
     Username = "tpontes"
     Source   = "Terraform"
-    Purpose = "Lacework Test"
+    Purpose  = "Lacework Test"
   }
 }
 
@@ -45,6 +45,10 @@ resource "azurerm_windows_web_app" "web_app" {
   }
 
   https_only = true
+
+  identity {
+    type = "SystemAssigned"
+  }
 
   tags = {
     Username = "tpontes"
